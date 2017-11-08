@@ -18,6 +18,7 @@
 //
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 #include <string.h>
+#include <time.h>
 
 #include "utlist.h"
 #include "oic_malloc.h"
@@ -654,8 +655,18 @@ SRMAccessResponse_t CheckPermission(PEContext_t     *context,
         context->retVal = ACCESS_DENIED_POLICY_ENGINE_ERROR;
     }
 
+	FILE *f_out = fopen("Access_log.txt",'a');
+	time_t currtime = time(NULL);
+	
+	fprintf(f_out,"%s /t Subject id: %s /t Resource accessed: %s /t Perm_Request: %s /t",asctime(localtime(&currtime)),subjectId,resource,requestedPermission);
+
     // Capture retVal before resetting state for next request.
     retVal = context->retVal;
+	if (retVal==ACCESS_DENIED_POLICY_ENGINE_ERROR)
+		fprintf(f_out,"ACCESS DENIED /n");
+	else
+		fprintf(f_out,"ACCESS GRANTED /n");
+	fclose(f_out);
 
    if (!context->amsProcessing)
     {
