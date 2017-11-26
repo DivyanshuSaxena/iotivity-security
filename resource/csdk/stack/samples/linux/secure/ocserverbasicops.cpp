@@ -55,6 +55,16 @@ char *gResourceUri= (char *)"/a/led";
 //of other devices which the server trusts
 static char CRED_FILE[] = "oic_svr_db_server.dat";
 
+//Function for writing to a file
+int fileLogging(char *log)
+{
+	FILE *fptr;
+	fptr = fopen("oiclogproj.txt","w");
+	fprintf(fptr,"%s",*log);
+	printf("%s",*log);
+	return 0;
+}
+
 OCRepPayload* getPayload(const char* uri, int64_t power, bool state)
 {
     OCRepPayload* payload = OCRepPayloadCreate();
@@ -119,6 +129,7 @@ OCEntityHandlerResult ProcessGetRequest (OCEntityHandlerRequest *ehRequest,
         OCRepPayload **payload)
 {
     OCEntityHandlerResult ehResult;
+	OIC_LOG (INFO,TAG,"In ProcessGetRequest");
 
     OCRepPayload *getResp = constructResponse(ehRequest);
 
@@ -126,6 +137,7 @@ OCEntityHandlerResult ProcessGetRequest (OCEntityHandlerRequest *ehRequest,
     {
         *payload = getResp;
         ehResult = OC_EH_OK;
+		fileLogging("Ok get Request");
     }
     else
     {
