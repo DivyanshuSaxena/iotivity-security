@@ -553,7 +553,7 @@ SRMAccessResponse_t CheckPermission(PEContext_t     *context,
                                     const uint16_t  requestedPermission)
 {
     SRMAccessResponse_t retVal = ACCESS_DENIED_POLICY_ENGINE_ERROR;
-    printf("Aa gaya aa gaya aa gaya");
+
     VERIFY_NON_NULL(TAG, context, ERROR);
     VERIFY_NON_NULL(TAG, subjectId, ERROR);
     VERIFY_NON_NULL(TAG, resource, ERROR);
@@ -658,7 +658,6 @@ SRMAccessResponse_t CheckPermission(PEContext_t     *context,
 	FILE *f_out = fopen("Access_log.txt",'a');
 	time_t currtime = time(NULL);
 	
-	printf("aa gaya mai idhar");
 	fprintf(f_out,"%s /t Subject id: %s /t Resource accessed: %s /t Perm_Request: %s /t",asctime(localtime(&currtime)),subjectId,resource,requestedPermission);
 
     // Capture retVal before resetting state for next request.

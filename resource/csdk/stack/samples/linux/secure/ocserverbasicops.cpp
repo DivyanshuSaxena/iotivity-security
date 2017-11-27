@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -55,13 +56,24 @@ char *gResourceUri= (char *)"/a/led";
 //of other devices which the server trusts
 static char CRED_FILE[] = "oic_svr_db_server.dat";
 
-//Function for writing to a file
-int fileLogging(char *log)
+int logging(char *uri, const char *method, int i)
 {
 	FILE *fptr;
+	time_t currtime = time(NULL);
+	OIC_LOG (INFO, TAG, "In function logging");
+	char access[10];
+	if(i==1)
+	{
+		strcpy(access, "Granted");
+	}
+	else
+	{
+		strcpy(access, "Denied");
+	}
 	fptr = fopen("oiclogproj.txt","w");
-	fprintf(fptr,"%s",*log);
-	printf("%s",*log);
+	fprintf(fptr,"%sUri: %s \t Method: %s \t Result: %s\n",asctime(localtime(&currtime)),method,access);	
+
+	// printf("%s",*log);
 	return 0;
 }
 
@@ -129,7 +141,6 @@ OCEntityHandlerResult ProcessGetRequest (OCEntityHandlerRequest *ehRequest,
         OCRepPayload **payload)
 {
     OCEntityHandlerResult ehResult;
-	OIC_LOG (INFO,TAG,"In ProcessGetRequest");
 
     OCRepPayload *getResp = constructResponse(ehRequest);
 
@@ -137,11 +148,12 @@ OCEntityHandlerResult ProcessGetRequest (OCEntityHandlerRequest *ehRequest,
     {
         *payload = getResp;
         ehResult = OC_EH_OK;
-		fileLogging("Ok get Request");
+		logging(getResp->uri,"Get",1);
     }
     else
     {
         ehResult = OC_EH_ERROR;
+		logging(getResp->uri,"Get",0);
     }
 
     return ehResult;
@@ -158,10 +170,12 @@ OCEntityHandlerResult ProcessPutRequest (OCEntityHandlerRequest *ehRequest,
     {
         *payload = putResp;
         ehResult = OC_EH_OK;
+		logging(putResp->uri,"Put",1);
     }
     else
     {
         ehResult = OC_EH_ERROR;
+		logging(putResp->uri,"Put",0);
     }
 
     return ehResult;
@@ -235,11 +249,13 @@ OCEntityHandlerResult ProcessPostRequest (OCEntityHandlerRequest *ehRequest,
     {
         *payload = respPLPost_led;
         ehResult = OC_EH_OK;
+		logging(respPLPost_led->uri,"Post",1);
     }
     else
     {
         OIC_LOG_V (INFO, TAG, "Payload was NULL");
         ehResult = OC_EH_ERROR;
+		logging(respPLPost_led->uri,"Post",0);
     }
 
     return ehResult;
