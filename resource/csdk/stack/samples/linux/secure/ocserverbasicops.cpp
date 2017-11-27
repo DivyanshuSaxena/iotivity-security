@@ -70,10 +70,11 @@ int logging(char *uri, const char *method, int i)
 	{
 		strcpy(access, "Denied");
 	}
-	fptr = fopen("oiclogproj.txt","w");
-	fprintf(fptr,"%sUri: %s \t Method: %s \t Result: %s\n",asctime(localtime(&currtime)),method,access);	
+	fptr = fopen("oiclogproj.txt","a");
+	fprintf(fptr,"%sUri: %s \t Method: %s \t Result: %s\n",asctime(localtime(&currtime)), uri, method, access);	
 
 	// printf("%s",*log);
+	fclose(fptr);
 	return 0;
 }
 
