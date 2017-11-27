@@ -90,7 +90,6 @@ dep/
 .scon*
 config.log
 os
-out/
 platform
 iotivity.pc
 tmp/
